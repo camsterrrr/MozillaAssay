@@ -6,9 +6,9 @@ This repository contains the implementation of the Mozilla Assay Tool as a Langu
 
 ## Getting Started with Local Development
 
-1. Git Clone https://github.com/camsterrrr/MozillaAssay.git
-2. cd MozillaAssay/
-3. npm install
+1. **Git Clone:** `git clone https://github.com/camsterrrr/MozillaAssay.git`
+2. **Change Directory:** `cd MozillaAssay/`
+3. **Install Dependencies:** `npm install`
 
 This should install all necessary dependencies and packages. To begin custom development, visit `server/out/server.js`.
 
@@ -17,7 +17,8 @@ documents.onDidChangeContent(change => {
     validateTextDocument(change.document);
 });
 ```
-is an event listener that checks for when a file has been changed by the user.
+
+This is an event listener that checks for when a file has been changed by the user.
 
 The function:
 
@@ -33,3 +34,19 @@ server
 │   ├── server.js
 │   └── server.js.map
 ```
+
+## Running the Server
+
+1. **Mac:** Press Shift+Command+B, this starts the build task.
+   ![Build Task](img/Build_task.png)
+2. Click on the Debug tab on the left side of VSCODE.
+3. Make sure 'Launch Client' is selected and click play. This will open another vscode window.
+   ![Debug Launch Client](img/Debug_LaunchClient.png)
+4. Create a .txt file and paste the following:
+   ```
+   TypeScript lets you write JavaScript the way you really want to.
+   TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.
+   ANY browser. ANY host. ANY OS. Open Source.
+   ```
+5. If it is running correctly, you should see this output in the new window:
+   ![Test Output](img/test.png)
