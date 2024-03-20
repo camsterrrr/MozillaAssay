@@ -50,3 +50,28 @@ server
    ```
 5. If it is running correctly, you should see this output in the new window:
    ![Test Output](img/test.png)
+
+## Continuing Devlopment 
+
+--Insert clickable link that takes user to server.server.js line #117
+
+Things to look into:
+
+1. 
+```javascript
+documents.onDidChangeContent(change => {
+    //This doesn't utilize both validators, or maybe it does but the second one overwrites the first
+
+    validateTextDocument(change.document);
+    //validateTextDocumentForExploits(change.document);
+    validateTextDocumentForEval(change.document);
+});
+```
+
+Figure out how to allow both functions/validators to run and output information to Remote Client terminal.
+
+Validators/Functions:
+```javascript
+async function validateTextDocument(textDocument)
+async function validateTextDocumentForEval(textDocument)
+```

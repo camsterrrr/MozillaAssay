@@ -8,7 +8,9 @@
 		"vscode": "^1.75.0"
 	},
 	"activationEvents": [
-		"onLanguage:plaintext"
+		"onLanguage:plaintext",
+		"onLanguage:javascript",
+		"onLanguage:typescript"
 	],
 	"main": "./client/out/extension",
 	"contributes": {

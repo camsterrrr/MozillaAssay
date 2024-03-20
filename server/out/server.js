@@ -99,7 +99,9 @@ connection.languages.diagnostics.on(async (params) => {
     if (document !== undefined) {
         return {
             kind: node_1.DocumentDiagnosticReportKind.Full,
-            items: await validateTextDocument(document)
+            items: await validateTextDocument(document),
+            //Not sure if this is how you would call the second validator
+            items:  await validateTextDocumentForEval(document)
         };
     }
     else {
@@ -114,8 +116,13 @@ connection.languages.diagnostics.on(async (params) => {
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent(change => {
+    //This doesn't utilize both validators, or maybe it does but the second one overwrites the first
+
     validateTextDocument(change.document);
+    //validateTextDocumentForExploits(change.document);
+    validateTextDocumentForEval(change.document);
 });
+
 async function validateTextDocument(textDocument) {
     // In this simple example we get the settings for every validate run.
     const settings = await getDocumentSettings(textDocument.uri);
@@ -158,6 +165,66 @@ async function validateTextDocument(textDocument) {
     }
     return diagnostics;
 }
+
+async function validateTextDocumentForEval(textDocument) {
+    // In this simple example we get the settings for every validate run.
+    const settings = await getDocumentSettings(textDocument.uri);
+    // The validator creates diagnostics for the use of eval() or eval
+    const text = textDocument.getText();
+    const pattern = /\b(eval\s*\(\s*[^)]*\)|eval)\b/g; // Matches eval() or eval occurrences
+    let m;
+    let problems = 0;
+    const diagnostics = [];
+    while ((m = pattern.exec(text)) && problems < settings.maxNumberOfProblems) {
+        problems++;
+        const diagnostic = {
+            severity: node_1.DiagnosticSeverity.Warning,
+            range: {
+                start: textDocument.positionAt(m.index),
+                end: textDocument.positionAt(m.index + m[0].length)
+            },
+            message: `Potential use of eval(): ${m[0]}`,
+            source: 'eval-check'
+        };
+        if (hasDiagnosticRelatedInformationCapability) {
+            diagnostic.relatedInformation = [
+                {
+                    location: {
+                        uri: textDocument.uri,
+                        range: Object.assign({}, diagnostic.range)
+                    },
+                    message: 'Using eval() is discouraged due to security risks'
+                }
+            ];
+        }
+        diagnostics.push(diagnostic);
+    }
+    return diagnostics;
+}
+
+
+async function validateTextDocumentForExploits(textDocument) {
+    const settings = await getDocumentSettings(textDocument.uri);
+    const text = textDocument.getText();
+    //console.log(text);
+    /**
+     * Possibly send text information to Mozilla's API endpoints
+     * 
+     * response = await sendTextToMozillaAPI(text)
+    if response.status == "success":
+        // Process the response
+        // For example, analyze the response for potential exploits
+        // and generate diagnostics accordingly
+        diagnostics = processMozillaAPIResponse(response.data)
+        return diagnostics
+    else:
+        // Handle the case where the API request fails
+        // Log an error message or return an empty array of diagnostics
+        logErrorMessage("Failed to send text to Mozilla API")
+        return []
+     */
+}
+
 connection.onDidChangeWatchedFiles(_change => {
     // Monitored files have change in VSCode
     connection.console.log('We received a file change event');
