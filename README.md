@@ -51,27 +51,32 @@ server
 5. If it is running correctly, you should see this output in the new window:
    ![Test Output](img/test.png)
 
-## Continuing Devlopment 
+## Continuing Development
 
---Insert clickable link that takes user to server.server.js line #117
+To address concerns related to the code snippet at a specific location in `server.server.js`:
 
-Things to look into:
+[Link to server.server.js (line 117)](https://github.com/your/repository/server.server.js#L117)
 
-1. 
-```javascript
-documents.onDidChangeContent(change => {
-    //This doesn't utilize both validators, or maybe it does but the second one overwrites the first
+### Things to Look Into:
 
-    validateTextDocument(change.document);
-    //validateTextDocumentForExploits(change.document);
-    validateTextDocumentForEval(change.document);
-});
-```
+1. Modify the `documents.onDidChangeContent` function to incorporate multiple validators:
 
-Figure out how to allow both functions/validators to run and output information to Remote Client terminal.
+   ```javascript
+   documents.onDidChangeContent(change => {
+       //This doesn't utilize both validators, or maybe it does but the second one overwrites the first
 
-Validators/Functions:
-```javascript
-async function validateTextDocument(textDocument)
-async function validateTextDocumentForEval(textDocument)
-```
+       validateTextDocument(change.document);
+       //validateTextDocumentForExploits(change.document);
+       validateTextDocumentForEval(change.document);
+   });
+   ```
+
+   Ensure that both `validateTextDocument` and `validateTextDocumentForEval` functions are executed and their information outputted to the Remote Client terminal.
+
+   Validators/Functions:
+   ```javascript
+   async function validateTextDocument(textDocument)
+   async function validateTextDocumentForEval(textDocument)
+   ```
+   
+Adjust the URLs, file names, and line numbers in the clickable link according to your project's structure to make sure it navigates users to the correct location.
