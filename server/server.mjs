@@ -39,9 +39,13 @@ app.get('/', (req, res) => {
 	});
 
 	lint.run()
-	.then((linterResults) => {
-		console.log("Linter results:", linterResults);
-	}).catch((err) => console.error("addons-linter failure: ", err));
+ 	.then((linterResults) => {
+  		// Send linting results back to VSCode as JSON
+  		res.json({ lintingResults: linterResults });
+ 	}).catch((err) => {
+  		console.error("addons-linter failure: ", err);
+  		res.status(500).json({ error: "Server error" });
+ 	});
 });
 
 app.listen(port, () => {
