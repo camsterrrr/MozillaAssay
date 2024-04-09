@@ -4,9 +4,16 @@ import express from 'express';
 const app = express();
 const port = 3000;
 
-const sourceDir = process.cwd();
 
 app.get('/', (req, res) => {
+	let sourceDir = process.cwd();
+
+	if (req.query.directory) {
+		sourceDir = "/Users/machavez/Desktop/MozillaAssay/" + req.query.directory + "/animated.zip"; // If a directory parameter is provided in the query, use it
+	}
+
+	console.log("sourceDir: ", sourceDir);
+
 	const lint = linter.createInstance({
 		// options
 		config: {
@@ -15,7 +22,7 @@ app.get('/', (req, res) => {
 		_: [sourceDir],
 		logLevel: process.env.VERBOSE ? 'debug' : 'fatal',
 		stack: Boolean(process.env.VERBOSE),
-		pretty: false,
+		pretty: true,
 		warningsAsErrors: false,
 		metadata: false,
 		output: 'none',
@@ -32,9 +39,13 @@ app.get('/', (req, res) => {
 	});
 
 	lint.run()
-	.then((linterResults) => {
-		console.log("Linter results:", linterResults);
-	}).catch((err) => console.error("addons-linter failure: ", err));
+ 	.then((linterResults) => {
+  		// Send linting results back to VSCode as JSON
+  		res.json({ lintingResults: linterResults });
+ 	}).catch((err) => {
+  		console.error("addons-linter failure: ", err);
+  		res.status(500).json({ error: "Server error" });
+ 	});
 });
 
 app.listen(port, () => {
