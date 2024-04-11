@@ -1,20 +1,27 @@
 import linter from 'addons-linter';
 import express from 'express';
+import path from 'path';
 
 const app = express();
 const port = 3000;
 
-
 app.get('/', async (req, res) => {
-	let sourceDir = process.cwd();
+    let sourceDir = process.cwd();
+    let extensionName = '';
 
-	if (req.query.directory) {
-		sourceDir = "/Users/machavez/Desktop/MozillaAssay/" + req.query.directory + "/name_of_extension_zip_or_xpi"; // If a directory parameter is provided in the query, use it
-	}
+    if (req.query.directory && req.query.file) {
+        const directory = req.query.directory;
+        const fileName = req.query.file;
+        sourceDir = path.join("file:///Users/machavez/Desktop/MozillaAssay/", directory, fileName); //Construct the source directory path
+        
+        //Extract extension name from file name
+        const extensionFileName = path.basename(fileName);
+        extensionName = path.parse(extensionFileName).name;
+    }
 
-	 try {
+    try {
         const lint = linter.createInstance({
-            // options
+            //options
             config: {
                 _: [sourceDir],
                 logLevel: process.env.VERBOSE ? 'debug' : 'fatal',
@@ -30,15 +37,18 @@ app.get('/', async (req, res) => {
         });
 
         const linterResults = await lint.run();
-        res.json({ lintingResults: linterResults });
+        
+        //Log linting results to the console
+        console.log(`Linting Results for ${extensionName}:`, linterResults);
+
+        //Send linting results as JSON response
+        res.json({ extensionName, lintingResults: linterResults });
     } catch (err) {
         console.error("addons-linter failure: ", err);
         res.status(500).json({ error: "Server error" });
     }
-	
 });
 
 app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
-  });
-
+    console.log(`Server is running on port ${port}`);
+});
