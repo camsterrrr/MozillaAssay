@@ -36,4 +36,110 @@ URL to use: http://localhost:3000/?directory=extensions
 
 This repository contains the implementation of the Mozilla Assay Tool as a Language Server. This project is part of the CSUMB Spring 2024 Capstone.
 
+## Getting Started with Local Development
 
+1. **Git Clone:** `git clone https://github.com/camsterrrr/MozillaAssay.git`
+2. **Change Directory:** `cd MozillaAssay/`
+3. **Install Dependencies:** `npm install`
+4. **Change Directory:** `cd MozillaAssay/linter/`
+5. **Install Dependencies:** `npm install`
+
+## NEW APPROACH 4/10
+
+1. 
+```
+linter/
+ 
+```
+
+This is the new directory that includes the VScode extension that takes the addons-linter results from the server and outputs them to the debug console in the client.
+
+## Process to Implement Functionality
+1. **Change Directory:** `cd MozillaAssay/linter/src/`
+2. **Instantiate Extension Remote Host:** `Press F5, for MAC make sure keyboard shortcuts are enabled and F5 will appear in the touchbar by holding down fn key`
+   - This will pop open a separate VScode windown that is running the extension in the back end. Navigate to the MozillaAssay/server/ in the new window.
+   - Start the server in the terminal
+   ```
+   node server.mjs
+   ```
+3. **Open browser and type the url: http://localhost:3000/?directory=extensions**
+4. **Enter remote host command**
+   - Navigate back to VScode window that is running the server, CMD+SHIFT+P to enter linting command. Type Hello World after >, press enter.
+   - Navigate back to VScode window that launched the remote host and click on the debug console terminal to see the output in raw form.
+
+## Future Implementations
+- In server.mjs, make it dynamic so that the name of the extension is a variable that can be replaced depending on the name of the zip or xpi file that is going to be linted.
+- ...
+- ...
+
+## OLD APPROACH
+This should install all necessary dependencies and packages. To begin custom development, visit `server/out/server.js`.
+
+```javascript
+documents.onDidChangeContent(change => {
+    validateTextDocument(change.document);
+});
+```
+
+This is an event listener that checks for when a file has been changed by the user.
+
+The function:
+
+```javascript
+async function validateTextDocument(textDocument)
+```
+
+is a custom function that checks the files for consecutive capitalization and reports the errors in the server's terminal.
+
+```
+server
+├── out
+│   ├── server.js
+│   └── server.js.map
+```
+
+## Running the Server
+
+1. **Mac:** Press Shift+Command+B, this starts the build task.
+   ![Build Task](img/Build_task.png)
+2. Click on the Debug tab on the left side of VSCODE.
+3. Make sure 'Launch Client' is selected and click play. This will open another vscode window.
+   ![Debug Launch Client](img/Debug_LaunchClient.png)
+4. Create a .txt file and paste the following:
+   ```
+   TypeScript lets you write JavaScript the way you really want to.
+   TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.
+   ANY browser. ANY host. ANY OS. Open Source.
+   ```
+5. If it is running correctly, you should see this output in the new window:
+   ![Test Output](img/test.png)
+
+## Continuing Development
+
+To address concerns related to the code snippet at a specific location in `server.server.js`:
+
+[Link to server.server.js (line 117)](https://github.com/your/repository/server.server.js#L117)
+
+### Things to Look Into:
+
+1. Modify the `documents.onDidChangeContent` function to incorporate multiple validators:
+
+   ```javascript
+   documents.onDidChangeContent(change => {
+       //This doesn't utilize both validators, or maybe it does but the second one overwrites the first
+
+       validateTextDocument(change.document);
+       //validateTextDocumentForExploits(change.document);
+       validateTextDocumentForEval(change.document);
+   });
+   ```
+
+   Ensure that both `validateTextDocument` and `validateTextDocumentForEval` functions are executed and their information outputted to the Remote Client terminal.
+
+   Validators/Functions:
+   ```javascript
+   async function validateTextDocument(textDocument)
+   async function validateTextDocumentForEval(textDocument)
+   ```
+   
+Adjust the URLs, file names, and line numbers in the clickable link according to your project's structure to make sure it navigates users to the correct location.
