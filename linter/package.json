@@ -18,6 +18,10 @@
 			{
 				"command": "extension.lintCode",
 				"title": "Hello World"
+			},
+			{
+				"command": "extension.lintCode_xpiInLocalFileSystem",
+				"title": "Lint XPI"
 			}
 		]
 	},

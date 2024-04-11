@@ -37,6 +37,10 @@ export function activate(context: vscode.ExtensionContext) {
         await displayLintingResults();
     });
 
+	const disposable_2 = vscode.commands.registerCommand('extension.lintCode_xpiInLocalFileSystem', async () => {
+        const response = await axios.get(`http://localhost:3000?workspaceAbsPath=${workspaceAbsPath}&addonGUID=&addonId=&addonVersion`);
+    });
+
     // Add the command to the extension's subscriptions
     context.subscriptions.push(disposable);
 }
